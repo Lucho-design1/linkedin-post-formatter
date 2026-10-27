@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Post Formatter & Optimizer | Lucho Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between font-sans">
+    <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur sticky top-0 z-50 p-4 flex justify-between items-center max-w-6xl mx-auto w-full">
+        <div class="flex items-center space-x-3">
+            <div class="bg-blue-600 text-white p-2 rounded-lg font-bold text-xl"><i class="fa-brands fa-linkedin"></i></div>
+            <span class="font-bold text-lg tracking-tight">LinkedIn Formatter Pro</span>
+        </div>
+        <a href="https://paypal.me/lucianobenech" target="_blank" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-xs md:text-sm font-semibold py-2 px-4 rounded-full shadow transition-all flex items-center gap-2">
+            <i class="fa-solid fa-mug-hot"></i> Apoyar este proyecto ($2 - $5 USD)
+        </a>
+    </header>
+
+    <main class="max-w-6xl mx-auto w-full px-4 py-8 grid md:grid-cols-2 gap-6 flex-grow">
+        <div class="flex flex-col space-y-3">
+            <div class="flex justify-between items-center">
+                <label class="font-medium text-slate-300 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-blue-400"></i> Escribe en Markdown:
+                </label>
+                <span id="charCount" class="text-xs text-slate-400">0 / 3000 caracteres</span>
+            </div>
+            <textarea id="markdownInput" placeholder="Escribe aquí tu post...&#10;&#10;**Texto en Negrita**&#10;*Texto en Cursiva*&#10;- Punto 1&#10;- Punto 2&#10;&#10;#hashtag1 #hashtag2" class="w-full h-96 p-4 rounded-xl bg-slate-800 border border-slate-700 text-slate-100 focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none font-mono text-sm shadow-inner"></textarea>
+            <div class="flex gap-2 flex-wrap">
+                <button onclick="insertFormatting('bold')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs rounded border border-slate-700 transition font-bold">**Negrita**</button>
+                <button onclick="insertFormatting('italic')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs rounded border border-slate-700 transition italic">*Cursiva*</button>
+                <button onclick="insertFormatting('bullet')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs rounded border border-slate-700 transition">• Viñeta</button>
+                <button onclick="insertFormatting('quote')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs rounded border border-slate-700 transition">💡 Cita</button>
+                <button onclick="clearText()" class="px-3 py-1.5 bg-red-900/40 hover:bg-red-900/70 text-red-300 text-xs rounded border border-red-800/50 transition ml-auto">Limpiar</button>
+            </div>
+        </div>
+
+        <div class="flex flex-col space-y-3">
+            <div class="flex justify-between items-center">
+                <label class="font-medium text-slate-300 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-eye text-emerald-400"></i> Resultado para LinkedIn:
+                </label>
+                <button onclick="copyToClipboard()" id="copyBtn" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold px-3 py-1.5 rounded transition flex items-center gap-1.5 shadow">
+                    <i class="fa-regular fa-copy"></i> Copiar Resultado
+                </button>
+            </div>
+            <div id="formattedOutput" class="w-full h-96 p-4 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 overflow-y-auto font-sans whitespace-pre-wrap shadow-inner border-l-4 border-l-blue-500"></div>
+            
+            <!-- Monetization Banner -->
+            <div class="p-4 rounded-xl bg-gradient-to-r from-blue-950 to-slate-900 border border-blue-800/50 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div>
+                    <h4 class="text-sm font-bold text-blue-300 flex items-center gap-1.5"><i class="fa-solid fa-bolt text-yellow-400"></i> ¿Quieres un Bot de Redacción MCP Personalizado?</h4>
+                    <p class="text-xs text-slate-400 mt-1">Configuramos agentes de contenido automatizados para LinkedIn y Twitter por $49 USD.</p>
+                </div>
+                <a href="mailto:santosycanallas@gmail.com?subject=Interes%20en%20Servicio%20MCP%20LinkedIn&body=Hola,%20quisiera%20mas%20informacion%20sobre%20el%20bot%20de%20contenido." class="whitespace-nowrap bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-2 px-3 rounded-lg shadow transition">
+                    Contactar Servicio
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="border-t border-slate-800 bg-slate-950 p-4 text-center text-xs text-slate-500">
+        <p>Publicación Autónoma | Pagos aceptados vía PayPal (lucianobenech@gmail.com) y USDT TRC20: <span class="text-slate-400 font-mono">TYndYVBb42q6U79tCm3VQzzhv2FtwAndhc</span></p>
+    </footer>
+
+    <script>
+        const boldMap = {
+            'a': '', 'b': '', 'c': '', 'd': '', 'e': '', 'f': '', 'g': '', 'h': '', 'i': '', 'j': '', 'k': '', 'l': '', 'm': '', 'n': '', 'o': '', 'p': '', 'q': '', 'r': '', 's': '', 't': '', 'u': '', 'v': '', 'w': '', 'x': '', 'y': '', 'z': '',
+            'A': '', 'B': '', 'C': '', 'D': '', 'E': '', 'F': '', 'G': '', 'H': '', 'I': '', 'J': '', 'K': '', 'L': '', 'M': '', 'N': '', 'O': '', 'P': '', 'Q': '', 'R': '', 'S': '', 'T': '', 'U': '', 'V': '', 'W': '', 'X': '', 'Y': '', 'Z': '',
+            '0': '', '1': '', '2': '', '3': '', '4': '', '5': '', '6': '', '7': '', '8': '', '9': ''
+        };
+
+        function toUnicodeBold(text) {
+            return text.split('').map(char => boldMap[char] || char).join('');
+        }
+
+        function formatMarkdown(text) {
+            let result = text;
+            // Format **bold**
+            result = result.replace(/\*\*(.*?)\*\*/g, (match, p1) => toUnicodeBold(p1));
+            // Format bullet points
+            result = result.replace(/^- (.*$)/gm, '• $1');
+            return result;
+        }
+
+        const input = document.getElementById('markdownInput');
+        const output = document.getElementById('formattedOutput');
+        const charCount = document.getElementById('charCount');
+
+        input.addEventListener('input', () => {
+            const formatted = formatMarkdown(input.value);
+            output.textContent = formatted;
+            charCount.textContent = `${input.value.length} / 3000 caracteres`;
+        });
+
+        function insertFormatting(type) {
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+            const selected = input.value.substring(start, end);
+            let replacement = '';
+            if (type === 'bold') replacement = `**${selected || 'texto'}**`;
+            if (type === 'italic') replacement = `*${selected || 'texto'}*`;
+            if (type === 'bullet') replacement = `\n- ${selected || 'punto'}`;
+            if (type === 'quote') replacement = `\n💡 "${selected || 'Cita destacada'}"`;
+            
+            input.value = input.value.substring(0, start) + replacement + input.value.substring(end);
+            input.dispatchEvent(new Event('input'));
+        }
+
+        function clearText() {
+            input.value = '';
+            input.dispatchEvent(new Event('input'));
+        }
+
+        function copyToClipboard() {
+            navigator.clipboard.writeText(output.textContent);
+            const btn = document.getElementById('copyBtn');
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiado!';
+            btn.classList.replace('bg-blue-600', 'bg-emerald-600');
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fa-regular fa-copy"></i> Copiar Resultado';
+                btn.classList.replace('bg-emerald-600', 'bg-blue-600');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
